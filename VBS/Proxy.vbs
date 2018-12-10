@@ -1,3 +1,15 @@
+'===================================================================================
+'
+' FILE: Proxy.vbs
+'
+' OPTIONS: No Options, used as a library 
+' REQUIREMENTS: vbs ver 5.0 or greater
+' BUGS: 
+' NOTES: 
+' AUTHOR: Ketan Desai ketandesai.co.uk
+' VERSION: 1.0
+' CREATED: 15.08.2013
+'===================================================================================
 Option Explicit
 Dim WSHShell, strSetting, Gateway1, Gateway2, strQuery, objWMIService, colItems, objItem, strGW, strIP
 Set WSHShell = WScript.CreateObject("WScript.Shell")
@@ -25,11 +37,11 @@ For Each objItem In colItems
 Next
 If strGW = Gateway1 then
 'WSHShell.regwrite "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings\ProxyEnable", 1, "REG_DWORD"
-MsgBox "Your are in TMA - Kingston " & chr(13) & "Gateway: " & strGW
+MsgBox "Your are in TMA - Site A " & chr(13) & "Gateway: " & strGW
 	else
 		If strGW = Gateway2 then
 		'WSHShell.regwrite "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings\ProxyEnable", 1, "REG_DWORD"
-		MsgBox "Your are in TMA - Polmont" & chr(13) & "Gateway: " & strGW
+		MsgBox "Your are in TMA - Site B" & chr(13) & "Gateway: " & strGW
 	else
 'WSHShell.regwrite "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings\ProxyEnable", 0, "REG_DWORD"
 MsgBox "Your are not in TMA " & chr(13) & "Gateway: " & strGW
