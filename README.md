@@ -1,2 +1,2 @@
-# VBS-Scripts
-VBS Scripts that i find useful
+# Admin-Scripts
+SysAdmin Scripts that i find useful
