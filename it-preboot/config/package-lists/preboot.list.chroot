@@ -1,0 +1,53 @@
+# Desktop / launcher
+xorg
+openbox
+lightdm
+xterm
+python3
+python3-tk
+python3-psutil
+sudo
+zenity
+
+# Networking / L2TP-IPsec
+network-manager
+network-manager-l2tp
+network-manager-l2tp-gnome
+strongswan
+xl2tpd
+ppp
+iproute2
+iputils-ping
+ethtool
+curl
+wget
+ca-certificates
+openssh-client
+
+# Hardware / storage inventory
+lshw
+dmidecode
+smartmontools
+nvme-cli
+pciutils
+usbutils
+hdparm
+util-linux
+parted
+gdisk
+
+# Clonezilla and helpers
+clonezilla
+partclone
+pigz
+pixz
+cifs-utils
+nfs-common
+rsync
+jq
+
+# Common firmware for physical PCs
+firmware-linux
+firmware-misc-nonfree
+firmware-iwlwifi
+firmware-realtek

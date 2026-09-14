@@ -1,0 +1,20 @@
+#!/bin/bash
+set -euo pipefail
+source /etc/it-preboot/preboot.conf
+if [[ -f /etc/it-preboot/secrets.env ]]; then source /etc/it-preboot/secrets.env; fi
+: "${VPN_SERVER:?Set VPN_SERVER in /etc/it-preboot/preboot.conf}"
+: "${VPN_USERNAME:?Set VPN_USERNAME in /etc/it-preboot/secrets.env}"
+: "${VPN_PASSWORD:?Set VPN_PASSWORD in /etc/it-preboot/secrets.env}"
+: "${VPN_IPSEC_PSK:?Set VPN_IPSEC_PSK in /etc/it-preboot/secrets.env}"
+
+NAME="${VPN_CONNECTION_NAME:-Corporate L2TP}"
+
+if nmcli -t -f NAME connection show | grep -Fxq "$NAME"; then
+  nmcli connection delete "$NAME" >/dev/null
+fi
+
+nmcli connection add type vpn vpn-type l2tp con-name "$NAME" ifname "*" \
+  vpn.data "gateway=$VPN_SERVER,user=$VPN_USERNAME,ipsec-enabled=yes,ipsec-psk=$VPN_IPSEC_PSK,password-flags=0"
+
+nmcli connection modify "$NAME" vpn.secrets "password=$VPN_PASSWORD"
+nmcli connection up "$NAME"

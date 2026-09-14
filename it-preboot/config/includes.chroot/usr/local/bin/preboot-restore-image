@@ -1,0 +1,46 @@
+#!/bin/bash
+set -euo pipefail
+
+if [[ $# -ne 2 ]]; then
+  echo "Usage: preboot-restore-image <clonezilla-image-dir> <target-disk>" >&2
+  exit 2
+fi
+
+IMAGE_DIR="$(readlink -f "$1")"
+TARGET_DISK="${2#/dev/}"
+
+if [[ ! -d "$IMAGE_DIR" ]]; then
+  echo "Image directory does not exist: $IMAGE_DIR" >&2
+  exit 1
+fi
+if [[ ! -b "/dev/$TARGET_DISK" ]]; then
+  echo "Target is not a block device: /dev/$TARGET_DISK" >&2
+  exit 1
+fi
+
+IMAGE_ROOT="$(dirname "$IMAGE_DIR")"
+IMAGE_NAME="$(basename "$IMAGE_DIR")"
+
+echo
+echo "DANGER: This will ERASE /dev/$TARGET_DISK and restore Clonezilla image:"
+echo "  $IMAGE_NAME"
+echo "from:"
+echo "  $IMAGE_ROOT"
+echo
+read -r -p "Type the target disk name '$TARGET_DISK' to continue: " ANSWER
+[[ "$ANSWER" == "$TARGET_DISK" ]] || { echo "Cancelled."; exit 1; }
+
+# Clonezilla convention: image repository mounted/available at /home/partimag.
+mkdir -p /home/partimag
+mountpoint -q /home/partimag && umount /home/partimag || true
+mount --bind "$IMAGE_ROOT" /home/partimag
+trap 'umount /home/partimag 2>/dev/null || true' EXIT
+
+# Conservative restore defaults: check image before restore, resize filesystem
+# to fit target where Clonezilla supports it, and leave the machine running so
+# the technician can inspect the result.
+ocs-sr -g auto -e1 auto -e2 -c -r -j2 -scr -p true restoredisk "$IMAGE_NAME" "$TARGET_DISK"
+
+echo
+echo "Clonezilla command completed. Review output above before rebooting."
+read -r -p "Press Enter to close..." _

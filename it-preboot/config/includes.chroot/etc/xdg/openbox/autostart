@@ -1,0 +1,5 @@
+# Disable screen blanking and launch the kiosk-like IT Preboot application.
+xset s off
+xset -dpms
+xset s noblank
+python3 /opt/it-preboot/preboot_gui.py &

@@ -1,0 +1,5 @@
+#!/bin/bash
+set -euo pipefail
+source /etc/it-preboot/preboot.conf
+NAME="${VPN_CONNECTION_NAME:-Corporate L2TP}"
+nmcli connection down "$NAME" || true

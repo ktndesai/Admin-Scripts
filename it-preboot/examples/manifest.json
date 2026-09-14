@@ -1,0 +1,12 @@
+{
+  "images": [
+    {
+      "id": "win11-qa-24h2",
+      "name": "Windows 11 QA Standard 24H2",
+      "blob_prefix": "win11-qa-24h2",
+      "clonezilla_image": "win11-qa-24h2",
+      "description": "Standard QA workstation image",
+      "sha256_manifest": "SHA256SUMS"
+    }
+  ]
+}

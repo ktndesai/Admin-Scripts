@@ -1,0 +1,21 @@
+#!/bin/sh
+set -e
+
+# Permit the live user to run the controlled preboot helpers.
+cat >/etc/sudoers.d/it-preboot <<'SUDOEOF'
+preboot ALL=(root) NOPASSWD: /usr/local/bin/preboot-vpn-connect, /usr/local/bin/preboot-vpn-disconnect, /usr/local/bin/preboot-restore-image, /usr/local/bin/preboot-clonezilla, /sbin/reboot, /sbin/poweroff, /usr/sbin/reboot, /usr/sbin/poweroff, /usr/sbin/dmidecode
+SUDOEOF
+chmod 0440 /etc/sudoers.d/it-preboot
+
+# Install Microsoft AzCopy v10 for Azure Blob downloads.
+# Pinning can be added later once you choose your preferred production version.
+tmpdir="$(mktemp -d)"
+trap 'rm -rf "$tmpdir"' EXIT
+curl -fsSL https://aka.ms/downloadazcopy-v10-linux -o "$tmpdir/azcopy.tar.gz"
+tar -xzf "$tmpdir/azcopy.tar.gz" -C "$tmpdir"
+azcopy_bin="$(find "$tmpdir" -type f -name azcopy -perm /111 | head -n1)"
+if [ -z "$azcopy_bin" ]; then
+  echo "AzCopy binary not found after download" >&2
+  exit 1
+fi
+install -m 0755 "$azcopy_bin" /usr/local/bin/azcopy
